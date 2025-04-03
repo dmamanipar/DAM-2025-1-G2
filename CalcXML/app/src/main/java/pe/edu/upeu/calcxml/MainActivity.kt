@@ -34,7 +34,8 @@ class MainActivity : AppCompatActivity() {
     private fun ejecutar(){
         var botones= arrayOf(R.id.btn0,R.id.btn1, R.id.btn2, R.id.btn3, R.id.btn4,
             R.id.btn5, R.id.btn6, R.id.btn7, R.id.btn8,
-            R.id.btn9, R.id.btnPunto, R.id.btnBorrar)
+            R.id.btn9, R.id.btnPunto, R.id.btnBorrar, R.id.btnSuma, R.id.btnResta,
+            R.id.btnMulti, R.id.btnDiv, R.id.btnIgual)
         for (b in botones){
             val button=findViewById<Button>(b)
             button.setOnClickListener { accion(button) }
@@ -53,13 +54,20 @@ class MainActivity : AppCompatActivity() {
             digitar(button.text.toString())
             }
 
-            R.id.btnSuma, R.id.btnMulti, R.id.btnResta, R.id.dtnDiv->{
+            R.id.btnSuma, R.id.btnMulti, R.id.btnResta, R.id.btnDiv->{
                 var button=findViewById<Button>(view.id)
                 operacion(button.text.toString())
             }
             R.id.btnIgual->{
                 calcularResult()
             }
+            R.id.btnBorrar->{
+                txtResult.setText("")
+                val1=0.0
+                val2=0.0
+                oper = ""
+            }
+
 
         }
     }

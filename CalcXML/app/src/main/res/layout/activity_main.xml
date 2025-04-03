@@ -177,12 +177,12 @@
         android:layout_height="wrap_content"
         android:text="="
         app:layout_constraintBottom_toBottomOf="@+id/btnPunto"
-        app:layout_constraintEnd_toStartOf="@+id/dtnDiv"
+        app:layout_constraintEnd_toStartOf="@+id/btnDiv"
         app:layout_constraintStart_toEndOf="@+id/btnPunto"
         app:layout_constraintTop_toTopOf="@+id/btnPunto" />
 
     <Button
-        android:id="@+id/dtnDiv"
+        android:id="@+id/btnDiv"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="/"

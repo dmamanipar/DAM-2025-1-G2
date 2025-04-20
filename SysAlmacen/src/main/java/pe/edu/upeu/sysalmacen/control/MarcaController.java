@@ -6,11 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pe.edu.upeu.sysalmacen.dtos.MarcaDTO;
+import pe.edu.upeu.sysalmacen.excepciones.CustomResponse;
 import pe.edu.upeu.sysalmacen.mappers.MarcaMapper;
 import pe.edu.upeu.sysalmacen.modelo.Marca;
 import pe.edu.upeu.sysalmacen.servicio.IMarcaService;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -33,12 +35,14 @@ public class MarcaController {
         Marca obj = marcaService.findById(id);
         return ResponseEntity.ok(marcaMapper.toDTO(obj));
     }
-
+    /*
+    * Otra forma de llamar return ResponseEntity.created(location).build();
+    * */
     @PostMapping
-    public ResponseEntity<Void> save(@Valid @RequestBody MarcaDTO dto) {
+    public ResponseEntity<CustomResponse> save(@Valid @RequestBody MarcaDTO dto) {
         Marca obj = marcaService.save(marcaMapper.toEntity(dto));
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdMarca()).toUri();
-        return ResponseEntity.created(location).build();
+        //URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdMarca()).toUri();
+        return ResponseEntity.ok(new CustomResponse(200,LocalDateTime.now(), (obj!=null?"true":"false"), String.valueOf(obj.getIdMarca())));
     }
 
     @PutMapping("/{id}")
@@ -47,11 +51,13 @@ public class MarcaController {
         Marca obj = marcaService.update(id, marcaMapper.toEntity(dto));
         return ResponseEntity.ok(marcaMapper.toDTO(obj));
     }
-
+    /*
+    * Otra forma de retornar - return ResponseEntity.noContent().build();
+    * */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        marcaService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CustomResponse> delete(@PathVariable("id") Long id) {
+        CustomResponse operacion= marcaService.delete(id);
+        return ResponseEntity.ok(operacion);
     }
 
     /*@GetMapping("/hateoas/{id}")

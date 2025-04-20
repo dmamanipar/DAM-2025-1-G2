@@ -1,5 +1,7 @@
 package pe.edu.upeu.sysalmacen.servicio;
 
+import pe.edu.upeu.sysalmacen.excepciones.CustomResponse;
+
 import java.util.List;
 
 public interface ICrudGenericoService<T,ID> {
@@ -7,5 +9,5 @@ public interface ICrudGenericoService<T,ID> {
     T update(ID id, T t);
     List<T> findAll();
     T findById(ID id);
-    void delete(ID id);
+    CustomResponse delete(ID id);
 }

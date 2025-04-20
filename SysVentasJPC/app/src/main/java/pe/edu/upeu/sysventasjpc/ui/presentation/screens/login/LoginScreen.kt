@@ -7,15 +7,22 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.github.k0shk0sh.compose.easyforms.BuildEasyForms
@@ -47,6 +54,8 @@ fun LoginScreen(
     val isLogin by viewModel.islogin.observeAsState(false)
     val isError by viewModel.isError.observeAsState(false)
     val loginResul by viewModel.listUser.observeAsState()
+    val errorMessage by viewModel.errorMessage.observeAsState()
+    val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     Column (
@@ -89,9 +98,22 @@ fun LoginScreen(
                 ComposeReal.COMPOSE_TOP.invoke()
             }
         }
+        ErrorImageAuth(isImageValidate = isError)
+        ProgressBarLoading(isLoading = isLoading)
     }
-    ErrorImageAuth(isImageValidate = isError)
-    ProgressBarLoading(isLoading = isLoading)
+    // Mostrar Snackbar manualmente
+    SnackbarHost(
+        hostState = snackbarHostState,
+        modifier = Modifier.wrapContentHeight(Alignment.Bottom).padding(16.dp),
+
+    )
+    // Mostrar el snackbar cuando haya mensaje de error
+    LaunchedEffect(errorMessage) {
+        errorMessage?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.clearErrorMessage()
+        }
+    }
 }
 
 

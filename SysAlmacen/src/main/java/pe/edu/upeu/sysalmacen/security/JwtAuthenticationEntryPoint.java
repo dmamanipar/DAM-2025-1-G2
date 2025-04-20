@@ -10,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
-import pe.edu.upeu.sysalmacen.excepciones.CustomErrorResponse;
+import pe.edu.upeu.sysalmacen.excepciones.CustomResponse;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -27,7 +27,7 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
             exceptionMsg = "Token not found or invalid";
         }
 
-        CustomErrorResponse errorResponse = new CustomErrorResponse(LocalDateTime.now(), exceptionMsg, request.getRequestURI());
+        CustomResponse errorResponse = new CustomResponse(HttpStatus.UNAUTHORIZED.value(), LocalDateTime.now(), exceptionMsg, request.getRequestURI());
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);

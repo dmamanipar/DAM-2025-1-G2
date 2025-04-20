@@ -8,11 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pe.edu.upeu.sysalmacen.dtos.ProductoDTO;
+import pe.edu.upeu.sysalmacen.excepciones.CustomResponse;
 import pe.edu.upeu.sysalmacen.mappers.ProductoMapper;
 import pe.edu.upeu.sysalmacen.modelo.Producto;
 import pe.edu.upeu.sysalmacen.servicio.IProductoService;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -36,10 +38,11 @@ public class ProductoController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> save(@Valid @RequestBody ProductoDTO.ProductoCADto dto) {
+    public ResponseEntity<CustomResponse> save(@Valid @RequestBody ProductoDTO.ProductoCADto dto) {
         ProductoDTO obj = productoService.saveD(dto);
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdProducto()).toUri();
-        return ResponseEntity.created(location).build();
+        //URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdProducto()).toUri();
+        //return ResponseEntity.created(location).build();
+        return ResponseEntity.ok(new CustomResponse(200, LocalDateTime.now(), (obj!=null?"true":"false"), String.valueOf(obj.getIdProducto())));
     }
 
     @PutMapping("/{id}")
@@ -49,9 +52,10 @@ public class ProductoController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        productoService.delete(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<CustomResponse> delete(@PathVariable("id") Long id) {
+        CustomResponse operacion= productoService.delete(id);
+        //return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(operacion);
     }
 
     @GetMapping("/pageable")

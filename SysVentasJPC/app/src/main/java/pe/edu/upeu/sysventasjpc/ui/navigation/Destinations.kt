@@ -31,5 +31,6 @@ sealed class Destinations(
                 return "productoForm?prodId=$prodId"
             }
         }
+    object MarcaMainSC: Destinations("marcamain","Adm. Marca", Icons.Filled.DateRange)
 
 }

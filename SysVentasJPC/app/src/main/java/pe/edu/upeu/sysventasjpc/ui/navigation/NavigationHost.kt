@@ -13,6 +13,7 @@ import pe.edu.upeu.sysventasjpc.ui.presentation.screens.Pantalla3
 import pe.edu.upeu.sysventasjpc.ui.presentation.screens.Pantalla4
 import pe.edu.upeu.sysventasjpc.ui.presentation.screens.Pantalla5
 import pe.edu.upeu.sysventasjpc.ui.presentation.screens.login.LoginScreen
+import pe.edu.upeu.sysventasjpc.ui.presentation.screens.marca.MarcaMain
 import pe.edu.upeu.sysventasjpc.ui.presentation.screens.producto.ProductoForm
 import pe.edu.upeu.sysventasjpc.ui.presentation.screens.producto.ProductoMain
 
@@ -65,6 +66,15 @@ fun NavigationHost(
             ProductoForm(text = prodId, darkMode = darkMode,
                 navController=navController )
         }
+
+
+        composable(Destinations.MarcaMainSC.route){
+            MarcaMain(navegarEditarAct = {newText->
+              /*  navController.navigate(Destinations.MarcaFormSC.passId(newText))*/
+            },
+                navController =navController )
+        }
+
 
 
     }

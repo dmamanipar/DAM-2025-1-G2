@@ -4,6 +4,7 @@ import 'package:ventas_app/drawer/home_drawer.dart';
 import 'package:ventas_app/ui/help_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ventas_app/ui/producto/producto_main.dart';
+import 'package:ventas_app/ui/productob/producto_main.dart';
 
 class NavigationHomeScreen extends StatefulWidget {
   @override
@@ -59,9 +60,9 @@ class _NavigationHomeScreenState extends State<NavigationHomeScreen> {
         setState(() {
           screenView = MainProducto();
         });
-      } else if (drawerIndex == DrawerIndex.Imagex) {
+      } else if (drawerIndex == DrawerIndex.Help) {
         setState(() {
-          //screenView = MainUploadImage();
+          screenView = MainProductoB();
         });
       } else {
         //do in your way......

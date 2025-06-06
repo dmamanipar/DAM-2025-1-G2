@@ -4,6 +4,7 @@ part of 'producto_bloc.dart';
 sealed class ProductoState {}
 
 final class ProductoInitialState extends ProductoState {}
+
 class ProductoLoaginState extends ProductoState{
 }
 class ProductoLoadedState extends ProductoState{
@@ -16,7 +17,11 @@ class ProductoLoadedFormDataState extends ProductoState{
   List<UnidadMedida> unidadMedidaList;
   ProductoLoadedFormDataState(this.marcaList, this.categoriaList, this.unidadMedidaList);
 }
-
+class ProductoLoadedFiltroState extends ProductoState{
+  List<ProductoResp> productoList;
+  List<ProductoResp> productosFiltrados;
+  ProductoLoadedFiltroState(this.productoList, this.productosFiltrados);
+}
 class ProductoError extends ProductoState{
   Error e;
   ProductoError(this.e);

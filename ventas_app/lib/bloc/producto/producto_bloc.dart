@@ -66,6 +66,18 @@ class ProductoBloc extends Bloc<ProductoEvent, ProductoState> {
         }catch(e){
           emit(ProductoError(e as Error));
         }
+      }else if(event is FiltrarProductosEvent){
+        emit(ProductoLoaginState());
+        try{
+          List<ProductoResp> productoList= await _productoRepository.getEntidad();
+          List<ProductoResp> productosFiltrados = productoList.where((producto) {
+            return producto.nombre.toLowerCase().contains(event.query.toLowerCase());
+          }).toList();
+
+          emit(ProductoLoadedFiltroState(productoList, productosFiltrados));
+        } catch(e){
+          emit(ProductoError(e as Error)) ;
+        }
       }
     });
   }

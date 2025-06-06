@@ -17,7 +17,7 @@ abstract class UsuarioApi{
     dio.interceptors.add(PrettyDioLogger());
     return UsuarioApi(dio);
   }
-
+  ////dart pub run build_runner build
   @POST("/users/login")//davidmp@upeu.edu.pe Da12345*
   Future<UsuarioResp> login(@Body() UsuarioLogin usuario);
 }

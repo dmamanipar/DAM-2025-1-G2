@@ -23,5 +23,9 @@ class CreateProductoEvent extends ProductoEvent{
 }
 
 class CreateProductoFormDataEvent extends ProductoEvent{
+}
 
+class FiltrarProductosEvent extends ProductoEvent {
+  String query;
+  FiltrarProductosEvent(this.query);
 }

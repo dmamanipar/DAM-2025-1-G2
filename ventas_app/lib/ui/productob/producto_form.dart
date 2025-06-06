@@ -1,17 +1,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:ventas_app/apis/categoria_api.dart';
-import 'package:ventas_app/apis/marca_api.dart';
-import 'package:ventas_app/apis/producto_api.dart';
-import 'package:ventas_app/apis/unidadmedida_api.dart';
 import 'package:ventas_app/bloc/producto/producto_bloc.dart';
 import 'package:ventas_app/modelo/CategoriaModelo.dart';
 import 'package:ventas_app/modelo/MarcaModelo.dart';
 import 'package:ventas_app/modelo/ProductoModelo.dart';
 import 'package:ventas_app/modelo/UnidadMedidaModelo.dart';
-import 'package:ventas_app/util/TokenUtil.dart';
 
 class ProductoFormB extends StatefulWidget {
   const ProductoFormB({super.key});
@@ -42,30 +36,8 @@ class _ProductoFormState extends State<ProductoFormB> {
   void initState(){
     super.initState();
     BlocProvider.of<ProductoBloc>(context).add(CreateProductoFormDataEvent());
-    //_loanData();
   }
 
-  /*void _loanData() async {
-    try {
-      final apim = Provider.of<MarcaApi>(context, listen: false);
-      final resultM = await apim.getMarca(TokenUtil.TOKEN);
-
-      final apic = Provider.of<CategoriaApi>(context, listen: false);
-      final resultC = await apic.getCategoria(TokenUtil.TOKEN);
-
-      final apiu = Provider.of<UnidadmedidaApi>(context, listen: false);
-      final resultU = await apiu.getUnidadMedida(TokenUtil.TOKEN);
-      setState(() {
-        marcas = resultM;
-        categorias=resultC;
-        unidades=resultU;
-      });
-    } catch (e) {
-      print('Error al cargar marcas, categoria o unidad medida: $e');
-    }
-  }*/
-
-  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,6 +114,7 @@ class _ProductoFormState extends State<ProductoFormB> {
                     children: [
                       ElevatedButton(
                         onPressed: (){
+                          BlocProvider.of<ProductoBloc>(context).add(ListarProductoEvent());
                           Navigator.pop(context, true);
                         },
                         child: const Text('Cancelar'),
@@ -179,17 +152,10 @@ class _ProductoFormState extends State<ProductoFormB> {
         marca: selectedMarca!.idMarca,
         unidadMedida: selectedUnidad!.idUnidad,
       );
-      /*var api = await Provider.of<ProductoApi>( context, listen: false)
-          .crearProducto(TokenUtil.TOKEN,producto);*/
-
-      /*if (api.toJson()!=null) {
-        Navigator.pop(context, () {setState(() {}); });
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationHomeScreen()));
-      }*/
 
       BlocProvider.of<ProductoBloc>(context).add(CreateProductoEvent(producto));
       Navigator.pop(context, () {setState(() {}); });
-      //print(producto.toJson());
+
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Producto registrado exitosamente')),

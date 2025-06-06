@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:animated_floating_buttons/animated_floating_buttons.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,6 +22,7 @@ import 'package:ventas_app/repository/UnidadMedidaRepository.dart';
 import 'package:ventas_app/theme/AppTheme.dart';
 import 'package:ventas_app/ui/producto/producto_edit.dart';
 import 'package:ventas_app/ui/producto/producto_form.dart';
+import 'package:ventas_app/ui/productob/producto_edit.dart';
 import 'package:ventas_app/ui/productob/producto_form.dart';
 import 'package:ventas_app/util/TokenUtil.dart';
 import '../help_screen.dart';
@@ -56,7 +58,7 @@ class ProductoUI extends StatefulWidget {
 }
 
 class _ProductoUIState extends State<ProductoUI> {
-  //late ProductoApi apiService;
+
   final DateFormat formatter = DateFormat('yyyy-MM-dd');
 
   late List<ProductoResp> personaL;
@@ -65,27 +67,13 @@ class _ProductoUIState extends State<ProductoUI> {
   @override
   void initState() {
     super.initState();
-   // _loanData();
+    //BlocProvider.of<ProductoBloc>(context).add(FiltrarProductosEvent(""));
   }
-
-  /*_loanData() async {
-    setState(() {
-      _isLoading = true;
-      apiService = ProductoApi.create();
-      personaXB.clear();
-      Provider.of<ProductoApi>(context, listen: false)
-          .getProducto(TokenUtil.TOKEN)
-          .then((data) {
-        personaXB = List.from(data);
-      });
-    });
-    await Future.delayed(Duration(seconds: 1));
-    setState(() {
-      personaL = List.from(personaXB);
-      _isLoading = false;
-    });
-    print("entro aqui");
-  }*/
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    super.dispose();
+  }
 
   final GlobalKey<AnimatedFloatingActionButtonState> key = GlobalKey<AnimatedFloatingActionButtonState>();
 
@@ -94,29 +82,15 @@ class _ProductoUIState extends State<ProductoUI> {
   List<String> imageNames = [];
   List<String> imagePaths = [];
   bool _isLoading = false;
-
+  late List<ProductoResp> lista;
   Future onGoBack(dynamic value) async {
     setState(() {
-     // _loanData();
       print(value);
     });
   }
 
   final _controller = TextEditingController();
-  //* update function
-  /*void updateList(String value) {
-
-    setState(() {
-      personaL = personaXB
-          .where(
-            (element){
-              return element.nombre.toLowerCase().contains(value.toLowerCase(), ) || 
-                  element.categoria.nombre.toLowerCase().contains(value.toLowerCase());
-            },
-          ).toList();
-    });
-  }*/
-
+  Timer? _debounce;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -163,10 +137,15 @@ class _ProductoUIState extends State<ProductoUI> {
 
 
         body: BlocBuilder<ProductoBloc, ProductoState>(builder: (context, state){
-          if(state is ProductoLoadedState){
-            final productos=state.productoList;
-            return _buildListView(context, productos);
-          }else{
+          if(state is ProductoLoadedState ){
+            lista = state.productoList;
+            return _buildListView(context, lista);
+          }else if(state is ProductoLoadedFiltroState){
+            lista = state.productosFiltrados!.isNotEmpty || state.productosFiltrados == []
+                ? state.productosFiltrados
+                : state.productoList;
+            return _buildListView(context, lista);
+          } else {
             return Center(child: CircularProgressIndicator());
           }
 
@@ -199,8 +178,11 @@ class _ProductoUIState extends State<ProductoUI> {
               Padding(
                 padding: const EdgeInsets.symmetric( horizontal: 8.0),
                 child: TextFormField(
-                  onChanged: (value) => {
-                    //updateList(value)
+                  onChanged: (value){
+                    if (_debounce?.isActive ?? false) _debounce!.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 500), () {
+                      context.read<ProductoBloc>().add(FiltrarProductosEvent(value));
+                    });
                   },
                   controller: _controller,
                   decoration: InputDecoration(
@@ -217,7 +199,7 @@ class _ProductoUIState extends State<ProductoUI> {
                         ),
                         onPressed: () {
                           _controller.clear();
-                          //updateList(_controller.value.text);
+                          context.read<ProductoBloc>().add(FiltrarProductosEvent(_controller.value.text));
                         }),
                     //fillColor: const Color.fromARGB(95, 119, 68, 50),
                     border: OutlineInputBorder(
@@ -317,7 +299,7 @@ class _ProductoUIState extends State<ProductoUI> {
                                                                 context,
                                                                 MaterialPageRoute(
                                                                     builder: (context) =>
-                                                                        ProductoFormEdit(
+                                                                        ProductoFormEditB(
                                                                             modelA:personax)
                                                                 ),
                                                               ).then(onGoBack);

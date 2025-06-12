@@ -1,9 +1,14 @@
+
+import 'package:floor/floor.dart';
+
+@Entity(tableName: 'marca')
 class Marca {
   Marca({
     required this.idMarca,
     required this.nombre,
   });
-
+  @PrimaryKey(autoGenerate: false)
+  @ColumnInfo(name: 'id_marca')
   late final int idMarca;
   late final String nombre;
   Marca.crear():idMarca=0, nombre="";

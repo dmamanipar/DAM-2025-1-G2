@@ -1,3 +1,4 @@
+import 'package:floor/floor.dart';
 import 'package:ventas_app/modelo/CategoriaModelo.dart';
 import 'package:ventas_app/modelo/MarcaModelo.dart';
 import 'package:ventas_app/modelo/UnidadMedidaModelo.dart';
@@ -56,7 +57,7 @@ class ProductoResp {
   };
 
 }
-
+@Entity(tableName: "producto")
 class ProductoDto {
   ProductoDto({
     required this.idProducto,
@@ -70,13 +71,16 @@ class ProductoDto {
     required this.marca,
     required this.unidadMedida,
   });
-
-  late final int idProducto;
+  @PrimaryKey(autoGenerate: false)
+  @ColumnInfo(name: 'id_producto')
+  late  int idProducto;
   late final String nombre;
   late final double pu;
+  @ColumnInfo(name: 'pu_old')
   late final double puOld;
   late final double utilidad;
   late final double stock;
+  @ColumnInfo(name: 'stock_old')
   late final double stockOld;
   late final int categoria;
   late final int marca;
